@@ -1,0 +1,33 @@
+version: '3.5'
+services:
+  geoserver:
+    build: .
+    image: geoserver:2.15.0-mysql
+    container_name: geoserver
+    restart: on-failure
+    networks:
+      - network
+    ports:
+      - '8080:8080'
+    volumes:
+      - gs_dir:${GEOSERVER_DATA_DIR}
+  db:
+    image: mysql/mysql-server:5.7
+    container_name: geoserver-mysql
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: 'geoserverdb'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'userpsswd123'
+      MYSQL_ONETIME_PASSWORD:
+    networks:
+      - network
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  db:
+  gs_dir:
+networks:
+  network:
